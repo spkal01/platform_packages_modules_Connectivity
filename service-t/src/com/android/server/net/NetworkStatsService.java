@@ -129,7 +129,7 @@ import android.os.Trace;
 import android.os.UserHandle;
 import android.provider.DeviceConfig;
 import android.provider.Settings;
-import android.provider.Settings.Global;
+import android.provider.Settings.System;
 import android.service.NetworkInterfaceProto;
 import android.service.NetworkStatsServiceDumpProto;
 import android.system.ErrnoException;
@@ -640,7 +640,7 @@ public class NetworkStatsService extends INetworkStatsService.Stub {
     }
 
     private static long wifiTimeoutDurationInMilli(Context mContext) {
-        return Settings.Global.getLong(mContext.getContentResolver(),
+        return Settings.System.getLong(mContext.getContentResolver(),
                 Global.WIFI_OFF_TIMEOUT, 0);
     }
 
@@ -927,13 +927,13 @@ public class NetworkStatsService extends INetworkStatsService.Stub {
         mAlarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME, currentRealtime,
                 mSettings.getPollInterval(), pollIntent);
 
-        mContentResolver.registerContentObserver(Settings.Global
+        mContentResolver.registerContentObserver(Settings.System
                 .getUriFor(NETSTATS_COMBINE_SUBTYPE_ENABLED),
                         false /* notifyForDescendants */, mContentObserver);
 
         // Post a runnable on handler thread to call onChange(). It's for getting current value of
         // NETSTATS_COMBINE_SUBTYPE_ENABLED to decide start or stop monitoring RAT type changes.
-        mHandler.post(() -> mContentObserver.onChange(false, Settings.Global
+        mHandler.post(() -> mContentObserver.onChange(false, Settings.System
                 .getUriFor(NETSTATS_COMBINE_SUBTYPE_ENABLED)));
 
         registerGlobalAlert();
@@ -3101,7 +3101,7 @@ public class NetworkStatsService extends INetworkStatsService.Stub {
 
     /**
      * Default external settings that read from
-     * {@link android.provider.Settings.Global}.
+     * {@link android.provider.Settings.System}.
      */
     private static class DefaultNetworkStatsSettings implements NetworkStatsSettings {
         DefaultNetworkStatsSettings() {}
